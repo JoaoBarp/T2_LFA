@@ -23,7 +23,7 @@ typedef struct regra{
     int max;     //tamanho maximo do vetor de transicao
     string ent;  //entrada
     string emp;  //pilha
-    vector <string> transicao; //prosimas transiçoes. Ex: <S> substitui por a<B>c
+    vector <string> transicao; //proximas transiçoes. Ex: <S> substitui por a<B>c
 }regra;
 
 //vetor que armazena as regras e transiçoes
