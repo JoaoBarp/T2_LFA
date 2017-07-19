@@ -8,29 +8,30 @@
 
 
 using namespace std;
-//saida do programa
+
+//estrutura de saida do programa
 typedef struct pilha{
-	int estado;
-	string entrada;
-	string Epilha;
-	int posicao;
-	int posicaoMax;
+	int estado;     //sempre é 0
+	string entrada; //entrada do arquivo
+	string Epilha;  //pilha
+	int posicao;    //posicao atual em que o ramo da arvore segue
+	int posicaoMax; //numero maximo de ramos que podem ser divididos
 
 }pilha;
 //Estrutura das regras e transiçoes lidas no arquivo
 typedef struct regra{
-    int max;
-    string ent;
-    string emp;
-    vector <string> transicao;
+    int max;     //tamanho maximo do vetor de transicao
+    string ent;  //entrada
+    string emp;  //pilha
+    vector <string> transicao; //prosimas transiçoes. Ex: <S> substitui por a<B>c
 }regra;
 
 //vetor que armazena as regras e transiçoes
 vector <regra> regras;
-
+//vetor de saida final
 vector <pilha> SAIDA;
 
-
+//busca a quantidade maxima que aquela regra/não terminal pode se dividir Ex: S::= Ax | By max de S é 2
 int BuscaMax(string reg){
 	int i;
 	for(i=0;i<regras.size();i++){
@@ -41,6 +42,7 @@ int BuscaMax(string reg){
 return -1;
 }
 
+//função de auxilio para leitura de arquivo
 string GetT(string linha){
 	string str;
 	int i=0;
@@ -52,8 +54,6 @@ string GetT(string linha){
     }
 return str;
 }
-
-//string GetR(string linha)
 
 //funçao que pega uma linha do arquivo e separa e armazena no vetor
 void tradusLinha(string linha){
@@ -123,6 +123,7 @@ void print(){
 	cout << endl;
 }
 
+//busca uma regra Ex: <S> verifica se existe o não terminal S
 string BuscaRegra(string bus,int pos){
 	int i,x;
 	x=pos-1;
@@ -136,6 +137,7 @@ string BuscaRegra(string bus,int pos){
 	return temp;
 }
 
+//busca string entre < >
 string erase(string x){
 	string temp;
 	int i=0;
@@ -149,6 +151,8 @@ string erase(string x){
 	return temp;
 }
 
+
+//troca um não terminal ex: <B> po ax<S>
 void trocaNterm(int pos) {
 	string temp,temp2;
 	int i=0;
@@ -180,6 +184,9 @@ void trocaNterm(int pos) {
 
 	SAIDA.push_back(TEMP);
 }
+
+
+//retira um não terminal da entrada e da pilha, se ambos forem iguais e tiver uma regra para isso.
 void retiraTerm(string ent, string emp, int pos){
 	int i;
 	int j=0;
@@ -212,6 +219,10 @@ void retiraTerm(string ent, string emp, int pos){
 	else{SAIDA.push_back(TEMP);}
 }
 
+
+//Nessa função é feito o desempilhamento para quando se chegou ao caso de ter terminais diferentes
+//na primeira posição da pilha e na entrada. Se o I chegar a ser menor q 0, significa que a entrada é invalida.
+//Pois já andou por todos os "ramos" da árvore.
 void desempilha() {
 	pilha TEMP;
 	string temp,temp2;
@@ -261,6 +272,8 @@ void desempilha() {
 
 }
 
+//Essa é funão principal, que roda enquanto a pilha e a entrada não estiverem vazias.
+//caso isso nunca ocorra entrada é invalida, o exit acontecera em outra função.
 void teste(string ent){
 		pilha TEMP;
 		string ter1,ter2;
@@ -305,7 +318,7 @@ int main(int argc, char **argv){
             exit(1);
       }
       getline(Efp,entrada);
-      //enquanto não acaba o arquivo, leio uma linha
+      //enquanto não acaba o arquivo de regras, leio uma linha
       while (!fp.eof()) {
              getline(fp,linha);
              if(linha.empty()){break;}
